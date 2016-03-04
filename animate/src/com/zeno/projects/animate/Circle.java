@@ -40,7 +40,12 @@ public class Circle {
  protected void setColor(String color){
      this.color = color;
  }
+   protected void setRadius(double radius){
+    this.radius=radius;
+ }
  protected String getColor(){
     return color;
  }
+
+
 }

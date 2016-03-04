@@ -30,8 +30,10 @@ public class TestCircle {
     Scanner s = new Scanner(System.in);
     System.out.println("Enter color of circle");
     c3.setColor(s.nextLine());
+    System.out.println("Enter radius");
+    c3.setRadius(s.nextDouble());
 
     System.out.println("The circle has a color" +" " + c3.getColor()+" radius of "
-    + c3.getRadius() + " and area of " + c2.getArea());
+    + c3.getRadius() + " and area of " + c3.getArea());
   }
 }    

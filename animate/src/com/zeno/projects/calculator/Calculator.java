@@ -25,7 +25,7 @@ public class Calculator extends JFrame {
     // constructor to initial values
     
     public Calculator(){
-        super("My Calculator");
+        super("Jude's Calculator");
         numbers = new JButton[10];
         for(int i = 0; i < 10; i++)
             numbers[i] = new JButton("" + i);
@@ -45,7 +45,7 @@ public class Calculator extends JFrame {
         operand2 = new JTextField(7);
         output = new JTextField(15);
         
-        this.setSize(225,300);
+        this.setSize(300,400);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         // panel to have the operand fields
         JPanel top = new JPanel();
