@@ -838,13 +838,16 @@ public class SimpleGui extends JFrame {
     private void btnBrowseActionPerformed(ActionEvent evt) {
     if (evt.getSource() == this.btnBrowse) {
         int returnVal = fc.showOpenDialog(SimpleGui.this);
-
+        String str ="";
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-
-            log.append("Opening: " + file.getName() + "." + newline);
+            str = "Opening: " + file.getName() + ".\n" ;
+            Logger.getLogger(SimpleGui.class.getName()).log(Level.OFF,str);
         } else {
-           // log.append("Open command cancelled by user." + newline);
+           str = "Open command cancelled by user.\n";
+            
+            Logger.getLogger(SimpleGui.class.getName()).log(Level.OFF,str);
+
         }
     }
     } 
