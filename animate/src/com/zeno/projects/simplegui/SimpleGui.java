@@ -2,6 +2,7 @@ package com.zeno.projects.simplegui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -16,6 +17,7 @@ import javax.swing.border.TitledBorder;
 
 public class SimpleGui extends JFrame {
     SimpleGui sgui;
+    private JFileChooser fc;
     private JButton btnBrowse,btnClose,btnHelp,btnRun;
     private JComboBox cboRotate;
     private JCheckBox chkForce2, chkforce1;
@@ -145,7 +147,7 @@ public class SimpleGui extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(pnlWindow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addContainerGap(200, Short.MAX_VALUE)));
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(pnlWindow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addContainerGap(200, Short.MAX_VALUE)));
-
+        fc = new JFileChooser();
     }
     // setup the properties
     protected void setProperties(){
@@ -834,9 +836,18 @@ public class SimpleGui extends JFrame {
        JOptionPane.showMessageDialog(sgui,"Run button clicked.");
     }
     private void btnBrowseActionPerformed(ActionEvent evt) {
+    if (evt.getSource() == this.btnBrowse) {
+        int returnVal = fc.showOpenDialog(SimpleGui.this);
 
-       JOptionPane.showMessageDialog(sgui,"Browse button clicked.");
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+
+            log.append("Opening: " + file.getName() + "." + newline);
+        } else {
+           // log.append("Open command cancelled by user." + newline);
+        }
     }
+    } 
 
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
