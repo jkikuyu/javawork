@@ -5,7 +5,6 @@
  */
 package com.zeno.projects.animate;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,9 +13,14 @@ import javax.swing.JOptionPane;
  */
 public class GuiHelloWorld {
     public static void main(String[] args){
-           JFrame frame = new JFrame("Hello World");
-           String name = JOptionPane.showInputDialog("Hello my name.");
-           JOptionPane.showMessageDialog(frame,"Hello Mr"+name  +"");
+           //JFrame frame = new JFrame("Hello World");
+           String name = JOptionPane.showInputDialog("Please Enter your Name.");
+           String cat1 =JOptionPane.showInputDialog("CAT 1");
+           String cat2 =JOptionPane.showInputDialog("CAT 2");
+           String cat3 =JOptionPane.showInputDialog("CAT 3");
+           int total = Integer.parseInt(cat1)+Integer.parseInt(cat2)+Integer.parseInt(cat3);
+           double avg = total/3;
+           JOptionPane.showMessageDialog(null,"Hello Mr "+name  +" your average is " + avg, "Hello world" ,JOptionPane.INFORMATION_MESSAGE);
            System.exit(0);
            
     }
