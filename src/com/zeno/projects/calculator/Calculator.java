@@ -25,8 +25,9 @@ public class Calculator extends JFrame  implements ActionListener {
     private static JButton equals;
     private static JButton dot;
     private static Stack operand, operator;
-    double amt =0.0;
-    JTextField output;
+    double amt =0.0, t = 0.0;
+    JTextField output,result;
+    JPanel display;
 //    JTextField operand1;
 //    JTextField operand2;
     // constructor to initial values
@@ -68,19 +69,25 @@ public class Calculator extends JFrame  implements ActionListener {
         output = new JTextField(15);
         output.setEditable(false);
         output.setBackground(Color.white);
+        result = new JTextField(10);
+        result.setEditable(false);
+        result.setBackground(Color.white);
+
         this.setSize(300,400);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         // panel to have the operand fields
         JPanel top = new JPanel();
-        top.setLayout(new GridLayout(1,1));
+        top.setLayout(new GridLayout(2,1));
         add(top, BorderLayout.NORTH);
 //        JPanel input = new JPanel();
 //        input.add(operand1);
 //        input.add(operand2);
 //        top.add(input);
-        JPanel results = new JPanel();
-        results.add(output);
-        top.add(results);
+          display = new JPanel();
+
+          display.add(output);
+          display.add(result);
+        top.add(display);
         // panel to contain the calculator buttons
         JPanel center = new JPanel();
         center.setLayout(new GridLayout(4,1));
@@ -117,6 +124,7 @@ public class Calculator extends JFrame  implements ActionListener {
          * this marks the end of the first operand.
          */
         String cmd =e.getActionCommand();
+
         boolean isExistOperator =true;
         if (operand.size() == 0)
              isExistOperator= false;
@@ -142,17 +150,20 @@ public class Calculator extends JFrame  implements ActionListener {
                }
             }
     }
-  private void computeTotal(){
+  private double computeTotal(){
 
       if(operator.peek().equals("+"))
-         amt +=(Double)operand.pop();
-      else if(operator.peek().equals("-"))
-          amt -=(Double)operand.pop();
+          amt =Double.parseDouble((String)operand.pop())+Double.parseDouble((String)operand.pop());
+      else if(operator.peek().equals("-")){
+          t = Double.parseDouble((String)operand.pop());
+          amt =Double.parseDouble((String)operand.pop())/t;
+      }
       else if(operator.peek().equals("*"))
-           amt *=(Double)operand.pop();
-      else if(operator.peek().equals("*"))
-           amt /=(Double)operand.pop();
-
+          amt = Double.parseDouble((String)operand.pop()) * Double.parseDouble((String)operand.pop());
+      else if(operator.peek().equals("/")){
+          t = Double.parseDouble((String)operand.pop());
+          amt =Double.parseDouble((String)operand.pop())/t;
+      }
   }
   public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
