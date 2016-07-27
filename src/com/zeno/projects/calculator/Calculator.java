@@ -24,8 +24,11 @@ public class Calculator extends JFrame  implements ActionListener {
     private static JButton dot;
     private static Stack operand, operator;
     double amt =0.0, t = 0.0;
+
     JTextField output,result;
     JPanel displayPanel, resultPanel;
+    //JTextArea output,result;
+    JPanel display;
 //    JTextField operand1;
 //    JTextField operand2;
     // constructor to initial values
@@ -73,10 +76,12 @@ public class Calculator extends JFrame  implements ActionListener {
        
         operand = new Stack();
         operator = new Stack();
-        output = new JTextField(15);
+        output = new JTextArea(1,20);
         output.setEditable(false);
         output.setBackground(Color.white);
+
         result = new JTextField(6);
+        result = new JTextArea(1,10);
         result.setEditable(false);
         result.setBackground(Color.white);
 
@@ -84,6 +89,7 @@ public class Calculator extends JFrame  implements ActionListener {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         // panel to have the operand fields
         JPanel top = new JPanel();
+        top.setLayout(new GridLayout(2,1));
         add(top, BorderLayout.NORTH);
 //        JPanel input = new JPanel();
 //        input.add(operand1);
@@ -97,6 +103,11 @@ public class Calculator extends JFrame  implements ActionListener {
           displayPanel.add(output);
           displayPanel.add(resultPanel);
         top.add(displayPanel);
+          display = new JPanel();
+
+          display.add(output);
+          display.add(result);
+        top.add(display);
         // panel to contain the calculator buttons
         JPanel center = new JPanel();
         center.setLayout(new GridLayout(4,1));
@@ -137,6 +148,7 @@ public class Calculator extends JFrame  implements ActionListener {
 
         boolean isExistOperand =true,
                 isResultComputed = false;
+        boolean isExistOperator =true;
         if (operand.size() == 0)
              isExistOperand = false;
 
@@ -154,6 +166,10 @@ public class Calculator extends JFrame  implements ActionListener {
                     operand.push(cmd);
                     
                     isResultComputed = true;
+                if(isExistOperator){
+                    operand.push(cmd);
+                    cmd = Double.toString(computeTotal());
+                    operand.push(cmd);
                 }
                 else{
                     cmd = operand.pop()+cmd ;
@@ -172,6 +188,16 @@ public class Calculator extends JFrame  implements ActionListener {
             text =Integer.toString(r);
             result.setText(text);
         }
+        if (isExistOperator){
+            text = result.getText();
+            text +=Integer.toString(Integer.parseInt(cmd));
+            result.setText(text);
+        }
+        else{
+            text = output.getText();
+            text +=cmd;
+            output.setText(text);
+        }
     }
   private double computeTotal(){
 
@@ -185,6 +211,8 @@ public class Calculator extends JFrame  implements ActionListener {
 
         amt = Double.parseDouble((String)operand.pop())* Double.parseDouble((String)operand.pop());
       }
+      else if(operator.peek().equals("*"))
+          amt = Double.parseDouble((String)operand.pop()) * Double.parseDouble((String)operand.pop());
       else if(operator.peek().equals("/")){
           t = Double.parseDouble((String)operand.pop());
           amt =Double.parseDouble((String)operand.pop())/t;
