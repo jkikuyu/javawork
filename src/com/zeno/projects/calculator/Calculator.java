@@ -6,8 +6,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.*;
 
 /**
@@ -27,7 +25,7 @@ public class Calculator extends JFrame  implements ActionListener {
     private static Stack operand, operator;
     double amt =0.0, t = 0.0;
     JTextField output,result;
-    JPanel display;
+    JPanel displayPanel, resultPanel;
 //    JTextField operand1;
 //    JTextField operand2;
     // constructor to initial values
@@ -35,11 +33,20 @@ public class Calculator extends JFrame  implements ActionListener {
     public Calculator(){
         super("Jude's Calculator");
         numbers = new JButton[10];
+        setResizable(false);
         for(int i = 0; i < 10; i++){
             numbers[i] = new JButton("" + i);
             numbers[i].setActionCommand(Integer.toString(i));
             numbers[i].addActionListener(this);
         }
+        FlowLayout f1 = new FlowLayout(FlowLayout.CENTER);
+        FlowLayout f2 = new FlowLayout(FlowLayout.CENTER,1,1);
+        for(int i = 0; i < 5; i++)
+            row[i] = new JPanel();
+        row[0].setLayout(f1);
+        for(int i = 1; i < 5; i++)
+            row[i].setLayout(f2);
+
         plus = new JButton("+");
         plus.setActionCommand("+");
         plus.addActionListener(this);
@@ -69,7 +76,7 @@ public class Calculator extends JFrame  implements ActionListener {
         output = new JTextField(15);
         output.setEditable(false);
         output.setBackground(Color.white);
-        result = new JTextField(10);
+        result = new JTextField(6);
         result.setEditable(false);
         result.setBackground(Color.white);
 
@@ -77,17 +84,19 @@ public class Calculator extends JFrame  implements ActionListener {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         // panel to have the operand fields
         JPanel top = new JPanel();
-        top.setLayout(new GridLayout(2,1));
         add(top, BorderLayout.NORTH);
 //        JPanel input = new JPanel();
 //        input.add(operand1);
 //        input.add(operand2);
 //        top.add(input);
-          display = new JPanel();
+          displayPanel = new JPanel();
+          resultPanel = new JPanel();
+          resultPanel.add(result,BorderLayout.EAST);
+          displayPanel.setLayout(new GridLayout(0,1));
 
-          display.add(output);
-          display.add(result);
-        top.add(display);
+          displayPanel.add(output);
+          displayPanel.add(resultPanel);
+        top.add(displayPanel);
         // panel to contain the calculator buttons
         JPanel center = new JPanel();
         center.setLayout(new GridLayout(4,1));
@@ -123,32 +132,46 @@ public class Calculator extends JFrame  implements ActionListener {
          * operand is entered as one value until a computation symbol is encountered
          * this marks the end of the first operand.
          */
-        String cmd =e.getActionCommand();
+        String cmd =e.getActionCommand(),
+        text = "";
 
-        boolean isExistOperator =true;
+        boolean isExistOperand =true,
+                isResultComputed = false;
         if (operand.size() == 0)
-             isExistOperator= false;
+             isExistOperand = false;
 
         if(cmd.matches("\\+\\-\\/")==true ||cmd.equals("x")){
             cmd = (cmd.equals("x"))?"*":cmd;
             operator.push(cmd);
 
-            }
-            else{
-                if (operand.size()==0)
-                    operand.push(cmd);
-                else{
-                    if(isExistOperator){
-                        operand.push(cmd);
-                        computeTotal();
-                    }
-                    else{
-                        cmd = operand.pop()+cmd ;
-                        operand.push(cmd);
-                    }
+        }
+        else{
+            if (operand.size()==0)
+                operand.push(cmd);
 
-               }
-            }
+            else{
+                if(isExistOperand){
+                    operand.push(cmd);
+                    
+                    isResultComputed = true;
+                }
+                else{
+                    cmd = operand.pop()+cmd ;
+                    operand.push(cmd);
+                }
+
+           }
+        }
+        text = output.getText();
+        text +=cmd;
+        output.setText(text);
+
+        if (isResultComputed){
+            cmd = Double.toString(computeTotal());
+            int r =(int) Double.parseDouble(cmd);
+            text =Integer.toString(r);
+            result.setText(text);
+        }
     }
   private double computeTotal(){
 
@@ -158,12 +181,16 @@ public class Calculator extends JFrame  implements ActionListener {
           t = Double.parseDouble((String)operand.pop());
           amt =Double.parseDouble((String)operand.pop())/t;
       }
-      else if(operator.peek().equals("*"))
-          amt = Double.parseDouble((String)operand.pop()) * Double.parseDouble((String)operand.pop());
+      else if(operator.peek().equals("*")){
+
+        amt = Double.parseDouble((String)operand.pop())* Double.parseDouble((String)operand.pop());
+      }
       else if(operator.peek().equals("/")){
           t = Double.parseDouble((String)operand.pop());
           amt =Double.parseDouble((String)operand.pop())/t;
+
       }
+      return amt;
   }
   public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
