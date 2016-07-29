@@ -11,10 +11,10 @@ import javax.swing.*;
 /**
  *
  * @author Jude Kikuyu
- * date: 29/02/2016
+ * date: 29/06/2016
  */
 public class Calculator extends JFrame  implements ActionListener {
-    
+    JPanel[] buttonRow = new JPanel[4];
     JButton [] numbers = new JButton[10];
     private static JButton plus;
     private static JButton minus;
@@ -24,117 +24,119 @@ public class Calculator extends JFrame  implements ActionListener {
     private static JButton dot;
     private static Stack operand, operator;
     double amt =0.0, t = 0.0;
+    int[] dimW = {300,45,100,90};
+    int[] dimH = {35, 40};
+    Dimension displayDimension = new Dimension(dimW[0], dimH[0]);
+    Dimension regularDimension = new Dimension(dimW[1], dimH[1]);
+    Dimension rColumnDimension = new Dimension(dimW[2], dimH[1]);
+    Dimension zeroButDimension = new Dimension(dimW[3], dimH[1]);
+    Font font = new Font("Times new Roman", Font.BOLD, 14);
 
-    JTextField output,result;
+    JTextArea output;
     JPanel displayPanel, resultPanel;
-    //JTextArea output,result;
     JPanel display;
-//    JTextField operand1;
-//    JTextField operand2;
-    // constructor to initial values
     
     public Calculator(){
         super("Jude's Calculator");
         numbers = new JButton[10];
         setResizable(false);
+        setSize(380, 250);
+        setDesign();
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+
         for(int i = 0; i < 10; i++){
             numbers[i] = new JButton("" + i);
             numbers[i].setActionCommand(Integer.toString(i));
+            numbers[i].setPreferredSize(regularDimension);
             numbers[i].addActionListener(this);
+
         }
         FlowLayout f1 = new FlowLayout(FlowLayout.CENTER);
         FlowLayout f2 = new FlowLayout(FlowLayout.CENTER,1,1);
-        for(int i = 0; i < 5; i++)
-            row[i] = new JPanel();
-        row[0].setLayout(f1);
-        for(int i = 1; i < 5; i++)
-            row[i].setLayout(f2);
+        GridLayout grid = new GridLayout(5,4);
+        setLayout(grid);
+
+        for(int i = 0; i < 4; i++){
+            buttonRow[i] = new JPanel();
+            buttonRow[i].setLayout(f2);
+            buttonRow[i].setFont(font);
+        }
 
         plus = new JButton("+");
         plus.setActionCommand("+");
         plus.addActionListener(this);
-       
+        plus.setPreferredSize(regularDimension);
+
         minus = new JButton("-");
         minus.setActionCommand("-");
         minus.addActionListener(this);
-        
+        minus.setPreferredSize(regularDimension);
+
         multiply = new JButton("x");
         multiply.setActionCommand("x");
         multiply.addActionListener(this);
+        multiply.setPreferredSize(regularDimension);
 
         divide = new JButton("/");
         divide.setActionCommand("/");
         divide.addActionListener(this);
+        divide.setPreferredSize(regularDimension);
 
         equals = new JButton("=");
         equals.setActionCommand("=");
         equals.addActionListener(this);
-       
+        equals.setPreferredSize(regularDimension);
+
         dot = new JButton(".");
         dot.setActionCommand(".");
         dot.addActionListener(this);
-       
+        dot.setPreferredSize(regularDimension);
+
         operand = new Stack();
         operator = new Stack();
-        output = new JTextArea(1,20);
+        output = new JTextArea(1,10);
         output.setEditable(false);
         output.setBackground(Color.white);
+        output.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        output.setPreferredSize(displayDimension);
 
-        result = new JTextField(6);
-        result = new JTextArea(1,10);
-        result.setEditable(false);
-        result.setBackground(Color.white);
+        displayPanel = new JPanel();
+        displayPanel.setLayout(f1);
 
-        this.setSize(300,400);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // panel to have the operand fields
-        JPanel top = new JPanel();
-        top.setLayout(new GridLayout(2,1));
-        add(top, BorderLayout.NORTH);
-//        JPanel input = new JPanel();
-//        input.add(operand1);
-//        input.add(operand2);
-//        top.add(input);
-          displayPanel = new JPanel();
-          resultPanel = new JPanel();
-          resultPanel.add(result,BorderLayout.EAST);
-          displayPanel.setLayout(new GridLayout(0,1));
+        displayPanel.add(output);
+        add(displayPanel);
+        for(int i = 7; i < 10; i++)
+            buttonRow[0].add(numbers[i]);
+        buttonRow[0].add(plus);
+        add(buttonRow[0]);
 
-          displayPanel.add(output);
-          displayPanel.add(resultPanel);
-        top.add(displayPanel);
-          display = new JPanel();
+        for(int i = 4; i < 7; i++)
+            buttonRow[1].add(numbers[i]);
+        buttonRow[1].add(minus);
+        add(buttonRow[1]);
 
-          display.add(output);
-          display.add(result);
-        top.add(display);
-        // panel to contain the calculator buttons
-        JPanel center = new JPanel();
-        center.setLayout(new GridLayout(4,1));
-        center.add(getRow(numbers[7], numbers[8], numbers[9], plus));
-        center.add(getRow(numbers[4], numbers[5], numbers[6], minus));
-        center.add(getRow(numbers[1], numbers[2], numbers[3], multiply));
-        center.add(getRow(dot, numbers[0], equals, divide));
-        add(center);
-
+        for(int i = 1; i < 4; i++)
+            buttonRow[2].add(numbers[i]);
+        buttonRow[2].add(divide);
+        add(buttonRow[2]);
+       buttonRow[3].add(numbers[0]);
+       buttonRow[3].add(dot);
+       buttonRow[3].add(equals);
+       buttonRow[3].add(multiply);
+       add(buttonRow[3]);
     }
+    public final void setDesign() {
+        try {
+            UIManager.setLookAndFeel(
+                    "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch(Exception e) { }
+    }
+
     public void createAndShowWindow(JFrame c){
         c.pack();
         c.setVisible(true);
 
-    }
-   private JPanel getRow(JButton b1, JButton b2, JButton b3, JButton b4){
-    JPanel row = new JPanel();
-    row.setLayout(new BoxLayout(row,BoxLayout.X_AXIS));
-    row.add(b1);
-    row.add(b2);
-    row.add(b3);
-    row.add(b4);
-    row.add(Box.createHorizontalGlue());
-    row.add(b1);row.add(b2);row.add(b3);row.add(b4);
-    row.add(Box.createHorizontalGlue());
-
-    return row;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -151,10 +153,12 @@ public class Calculator extends JFrame  implements ActionListener {
         boolean isExistOperator =true;
         if (operand.size() == 0)
              isExistOperand = false;
+             isExistOperator = false;
 
         if(cmd.matches("\\+\\-\\/")==true ||cmd.equals("x")){
             cmd = (cmd.equals("x"))?"*":cmd;
             operator.push(cmd);
+            isExistOperator = false;
 
         }
         else{
@@ -178,6 +182,7 @@ public class Calculator extends JFrame  implements ActionListener {
 
            }
         }
+        }
         text = output.getText();
         text +=cmd;
         output.setText(text);
@@ -186,12 +191,12 @@ public class Calculator extends JFrame  implements ActionListener {
             cmd = Double.toString(computeTotal());
             int r =(int) Double.parseDouble(cmd);
             text =Integer.toString(r);
-            result.setText(text);
+            output.setText(text);
         }
         if (isExistOperator){
-            text = result.getText();
+            text = output.getText();
             text +=Integer.toString(Integer.parseInt(cmd));
-            result.setText(text);
+            output.setText(text);
         }
         else{
             text = output.getText();
